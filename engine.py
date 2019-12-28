@@ -5,6 +5,7 @@ import pygame as pg
 
 import spritesheet
 import player
+import Map
 
 
 # see if we can load more than standard BMP
@@ -15,40 +16,6 @@ if not pg.image.get_extended():
 # game constants
 SCREENRECT = pg.Rect(0, 0, 640, 480)
 SCORE = 0
-TESTMAP = [
-    "##                                      ",
-    "    #                                   ",
-    "    #                                   ",
-    "    #                                   ",
-    "    #                                   ",
-    "    #                                   ",
-    "    #                                   ",
-    "    #####################               ",
-    "                        #               ",
-    "                        ###             ",
-    "                          #             ",
-    "                          #             ",
-    "                          ##############",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        "
-]
-
-mapData = [[{'wall': False if cell == ' ' else True, 'borders': 0} for cell in line] for line in TESTMAP]
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 
@@ -59,7 +26,6 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 #
 # The Player object actually gets a "move" function instead of update,
 # since it is passed extra information about the keyboard.
-
 
 def main(winstyle=0):
     # Initialize pygame
@@ -90,15 +56,9 @@ def main(winstyle=0):
     pg.display.set_caption("Cornwood Deluxe X Plus Ace")
     pg.mouse.set_visible(0)
 
-    # create the background, tile the bgd image
-    bs = spritesheet.spritesheet('DawnLike/Objects/Tile.png')
-    bgdtile = bs.image_at((0, 0, 16, 16))
-    background = pg.Surface(SCREENRECT.size)
-    for y, row in enumerate(mapData):
-        for x, cell in enumerate(row):
-            if cell['wall']:
-                background.blit(bgdtile, (x * bgdtile.get_width(), y * bgdtile.get_height()))
-    screen.blit(background, (0, 0))
+    # GENERATE MAP HERE
+    myMap = Map.Map()
+    screen.blit(myMap.background, (0, 0))
     pg.display.flip()
 
     # Create Some Starting Values
@@ -135,7 +95,7 @@ def main(winstyle=0):
         keystate = pg.key.get_pressed()
 
         # clear/erase the last drawn sprites
-        all.clear(screen, background)
+        all.clear(screen, myMap.background)
 
         # update all the sprites
         all.update()

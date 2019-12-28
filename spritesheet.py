@@ -7,6 +7,7 @@
 
 import pygame
 
+
 class spritesheet(object):
     def __init__(self, filename):
         self.sheet = pygame.image.load(filename).convert()
@@ -21,13 +22,26 @@ class spritesheet(object):
                 colorkey = image.get_at((0,0))
             image.set_colorkey(colorkey, pygame.RLEACCEL)
         return image
+
     # Load a whole bunch of images and return them as a list
-    def images_at(self, rects, colorkey = None):
-        "Loads multiple images, supply a list of coordinates" 
+    def images_at(self, rects, colorkey=None):
+        "Loads multiple images, supply a list of coordinates"
         return [self.image_at(rect, colorkey) for rect in rects]
+
     # Load a whole strip of images
-    def load_strip(self, rect, image_count, colorkey = None):
+    def load_strip(self, rect, image_count, colorkey=None):
         "Loads a strip of images and returns them as a list"
-        tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
+        tups = [(rect[0] + rect[2] * x, rect[1], rect[2], rect[3])
                 for x in range(image_count)]
         return self.images_at(tups, colorkey)
+
+    def load_walls(self, c, r):
+        "Loads a strip of images and returns them as a list"
+        wallsize = 16
+        rows = 3
+        cols = 7
+        left = c * (cols * wallsize)
+        top = r * (rows * wallsize)
+        tups = [[self.image_at((wallsize * x + left, wallsize * y + top, wallsize, wallsize))
+                 for y in range(rows)] for x in range(cols)]
+        return tups
