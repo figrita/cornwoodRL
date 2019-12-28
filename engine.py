@@ -89,7 +89,7 @@ def main(winstyle=0):
     # decorate the game window
     icon = pg.transform.scale(img, (32, 32))
     pg.display.set_icon(icon)
-    pg.display.set_caption("Pygame Aliens")
+    pg.display.set_caption("Cornwood Deluxe X Plus Ace")
     pg.mouse.set_visible(0)
 
     # create the background, tile the bgd image
