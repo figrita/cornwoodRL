@@ -15,6 +15,40 @@ if not pg.image.get_extended():
 # game constants
 SCREENRECT = pg.Rect(0, 0, 640, 480)
 SCORE = 0
+TESTMAP = [
+    "##                                      ",
+    "    #                                   ",
+    "    #                                   ",
+    "    #                                   ",
+    "    #                                   ",
+    "    #                                   ",
+    "    #                                   ",
+    "    #####################               ",
+    "                        #               ",
+    "                        ###             ",
+    "                          #             ",
+    "                          #             ",
+    "                          ##############",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        ",
+    "                                        "
+]
+
+mapData = [[{'wall': False if cell == ' ' else True, 'borders': 0} for cell in line] for line in TESTMAP]
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 
@@ -60,8 +94,10 @@ def main(winstyle=0):
     bs = spritesheet.spritesheet('DawnLike/Objects/Tile.png')
     bgdtile = bs.image_at((0, 0, 16, 16))
     background = pg.Surface(SCREENRECT.size)
-    for x in range(0, SCREENRECT.width, bgdtile.get_width()):
-        background.blit(bgdtile, (x, 0))
+    for y, row in enumerate(mapData):
+        for x, cell in enumerate(row):
+            if cell['wall']:
+                background.blit(bgdtile, (x * bgdtile.get_width(), y * bgdtile.get_height()))
     screen.blit(background, (0, 0))
     pg.display.flip()
 
