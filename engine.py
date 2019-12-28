@@ -1,10 +1,11 @@
-import random
 import os
 
 # import basic pygame modules
 import pygame as pg
 
 import spritesheet
+import player
+
 
 # see if we can load more than standard BMP
 if not pg.image.get_extended():
@@ -24,44 +25,6 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 #
 # The Player object actually gets a "move" function instead of update,
 # since it is passed extra information about the keyboard.
-
-
-class Player(pg.sprite.Sprite):
-    """ Representing the player as a moon buggy type car.
-    """
-
-    speed = 10
-    bounce = 24
-    gun_offset = -11
-    images = []
-
-    def __init__(self):
-        pg.sprite.Sprite.__init__(self, self.containers)
-        self.image = self.images[0]
-        self.rect = self.image.get_rect(midbottom=SCREENRECT.midbottom)
-        self.reloading = 0
-        self.origtop = self.rect.top
-        self.facing = -1
-
-    def move(self, direction):
-        if direction:
-            self.facing = direction
-        self.rect.move_ip(direction * self.speed, 0)
-        self.rect = self.rect.clamp(SCREENRECT)
-        if direction < 0:
-            self.image = self.images[0]
-        elif direction > 0:
-            self.image = self.images[1]
-        self.rect.top = self.origtop - (self.rect.left // self.bounce % 2)
-
-    def gunpos(self):
-        pos = self.facing * self.gun_offset + self.rect.centerx
-        return pos, self.rect.top
-
-    def update(self):
-        """ We only update the score in update() when it has changed.
-        """
-        return 0
 
 
 def main(winstyle=0):
@@ -84,7 +47,8 @@ def main(winstyle=0):
     # (do this before the classes are used, after screen setup)
     ss = spritesheet.spritesheet('DawnLike/Characters/Cat0.png')
     img = ss.image_at((0, 0, 16, 16))
-    Player.images = [img, pg.transform.flip(img, 1, 0)]
+    all = pg.sprite.RenderUpdates()
+    myplayer = player.player(img, all)
 
     # decorate the game window
     icon = pg.transform.scale(img, (32, 32))
@@ -101,17 +65,11 @@ def main(winstyle=0):
     screen.blit(background, (0, 0))
     pg.display.flip()
 
-    all = pg.sprite.RenderUpdates()
-
-    # assign default groups to each sprite class
-    Player.containers = all
-
     # Create Some Starting Values
     clock = pg.time.Clock()
-    player = Player()
 
     # Run our main loop whilst the player is alive.
-    while player.alive():
+    while myplayer.alive():
 
         # get input
         for event in pg.event.get():
@@ -148,7 +106,7 @@ def main(winstyle=0):
 
         # handle player input
         direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
-        player.move(direction)
+        myplayer.move(direction)
         
 
         # draw the scene
@@ -156,7 +114,7 @@ def main(winstyle=0):
         pg.display.update(dirty)
 
         # cap the framerate at 40fps. Also called 40HZ or 40 times per second.
-        clock.tick(40)
+        clock.tick(60)
 
     if pg.mixer:
         pg.mixer.music.fadeout(1000)
