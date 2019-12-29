@@ -64,8 +64,10 @@ def main(winstyle=0):
     # Create Some Starting Values
     clock = pg.time.Clock()
 
+    gameon = True
+
     # Run our main loop whilst the player is alive.
-    while myplayer.alive():
+    while gameon:
 
         # get input
         for event in pg.event.get():
@@ -101,9 +103,9 @@ def main(winstyle=0):
         all.update()
 
         # handle player input
-        direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
-        myplayer.move(direction)
-        
+        xdirection = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
+        ydirection = keystate[pg.K_DOWN] - keystate[pg.K_UP]
+        myplayer.move(xdirection, ydirection)
 
         # draw the scene
         dirty = all.draw(screen)

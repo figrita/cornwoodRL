@@ -100,6 +100,12 @@ class Map(object):
                     if cell['borders'] == Borders.N | Borders.W | Borders.E:
                         self.background.blit(self.walltiles[4][2], (x * 16, y * 16))
 
+    def is_wall(self, x, y):
+        if self.has_cell(x, y):
+            if self.mapData[y][y]['wall']:
+                return True
+        return False
+
     def has_cell(self, x, y):
         if x < 0 or y < 0:
             return False
