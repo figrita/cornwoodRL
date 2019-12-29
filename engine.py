@@ -94,18 +94,11 @@ def main(winstyle=0):
                     pg.display.flip()
                     fullscreen = not fullscreen
 
-        keystate = pg.key.get_pressed()
-
         # clear/erase the last drawn sprites
         all.clear(screen, myMap.background)
 
         # update all the sprites
         all.update()
-
-        # handle player input
-        xdirection = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
-        ydirection = keystate[pg.K_DOWN] - keystate[pg.K_UP]
-        myplayer.move(xdirection, ydirection)
 
         # draw the scene
         dirty = all.draw(screen)
